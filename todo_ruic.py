@@ -3,13 +3,15 @@
 import flet as ft
 
 
-class TodoApp(ft.UserControl):
+class TodoApp(ft.Column):
     """UI components"""
     new_task = None
     tasks = None
 
     def build(self):
         """build method"""
+        super().build()
+
         self.new_task = ft.TextField(
             hint_text="Whats needs to be done?", expand=True)
         self.tasks = ft.Column()
@@ -42,8 +44,9 @@ if __name__ == "__main__":
         page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
         page.update()
 
-        todo = TodoApp()
+        todo1 = TodoApp()
+        todo2 = TodoApp()
 
-        page.add(todo)
+        page.add(todo1, todo2)
 
     ft.app(target=main)

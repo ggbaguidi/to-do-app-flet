@@ -4,10 +4,11 @@ import flet as ft
 
 class Task(ft.Column):
     """task class"""
-    def __init__(self, task_name, *args, **kwargs):
+    def __init__(self, task_name, task_delete, *args, **kwargs):
         """create a task instance method"""
         super().__init__(*args, **kwargs)
         self.task_name = task_name
+        self.task_delete = task_delete
         self.display_task = None
         self.display_view = None
         self.edit_view = None
@@ -68,6 +69,7 @@ class Task(ft.Column):
 
     def delete_clicked(self, _):
         """delete method when the button is clicked"""
+        self.task_delete(self)
 
     def save_clicked(self, _):
         """update method when the button is clicked"""

@@ -33,9 +33,15 @@ class TodoApp(ft.Column):
 
     def add_clicked(self, _):
         """add clicked method"""
-        task = Task(self.new_task.value)
-        self.tasks.controls.append(task)
+        if self.new_task.value:
+            task = Task(self.new_task.value, self.delete_clicked)
+            self.tasks.controls.append(task)
         self.new_task.value = ""
+        self.update()
+
+    def delete_clicked(self, task):
+        """delete ckicked method"""
+        self.tasks.controls.remove(task)
         self.update()
 
 

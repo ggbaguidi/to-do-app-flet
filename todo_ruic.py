@@ -5,8 +5,10 @@ import flet as ft
 
 class TodoApp(ft.Column):
     """UI components"""
-    new_task = None
-    tasks = None
+    def __init__(self, *args, **kwargs):
+        super().__init__(args, kwargs)
+        self.new_task = None
+        self.tasks = None
 
     def build(self):
         """build method"""
@@ -32,7 +34,8 @@ class TodoApp(ft.Column):
 
     def add_clicked(self, _):
         """add clicked method"""
-        self.tasks.controls.append(ft.Checkbox(label=self.new_task.value))
+        if self.new_task.value:
+            self.tasks.controls.append(ft.Checkbox(label=self.new_task.value))
         self.new_task.value = ""
         self.update()
 

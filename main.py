@@ -10,6 +10,7 @@ class TodoApp(ft.Column):
         self.filter = None
         self.view = None
         self.tasks = None
+        self.items_left = None
 
     def build(self):
         """build method"""
@@ -24,9 +25,14 @@ class TodoApp(ft.Column):
             tabs=[ft.Tab(text="all"), ft.Tab(text="active"), ft.Tab(text="completed")],
         )
 
+        self.items_left = ft.Text("0 items left")
+
         self.view = ft.Column(
             width=600,
             controls=[
+                ft.Row(
+                    [ ft.Text(value="Todos", style="headlineMedium")],
+                    alignment=ft.MainAxisAlignment.CENTER),
                 ft.Row(
                     controls=[
                         self.new_task,
@@ -38,6 +44,16 @@ class TodoApp(ft.Column):
                     controls=[
                         self.filter,
                         self.tasks,
+                        ft.Row(
+                            alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
+                            vertical_alignment=ft.CrossAxisAlignment.CENTER,
+                            controls=[
+                                self.items_left,
+                                ft.OutlinedButton(
+                                    text="Clear completed", on_click=self.clear_clicked
+                                ),
+                            ],
+                        ),
                     ],
                 ),
             ],
@@ -78,12 +94,16 @@ class TodoApp(ft.Column):
     def update(self):
         """update"""
         status = self.filter.tabs[self.filter.selected_index].text
+        count = 0
         for task in self.tasks.controls:
             task.visible = (
                 status == "all"
                 or (status == "active" and not task.completed)
                 or (status == "completed" and task.completed)
             )
+            if not task.completed:
+                count += 1
+        self.items_left.value = f"{count} active item(s) left"
         super().update()
 
     def tabs_changed(self, _):
@@ -93,6 +113,12 @@ class TodoApp(ft.Column):
     def task_status_change(self, _):
         """change the task status"""
         self.update()
+
+    def clear_clicked(self, _):
+        """clear when the button clicked"""
+        for task in self.tasks.controls[:]:
+            if task.completed:
+                self.delete_clicked(task)
 
 
 if __name__ == "__main__":

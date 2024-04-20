@@ -4,10 +4,12 @@ import flet as ft
 
 class Task(ft.Column):
     """task class"""
-    def __init__(self, task_name, task_delete, *args, **kwargs):
+    def __init__(self, task_name, task_status_change, task_delete, *args, **kwargs):
         """create a task instance method"""
-        super().__init__(*args, **kwargs)
+        super().__init__(args, kwargs)
+        self.completed = False
         self.task_name = task_name
+        self.task_status_change = task_status_change
         self.task_delete = task_delete
         self.display_task = None
         self.display_view = None
@@ -17,7 +19,9 @@ class Task(ft.Column):
     def build(self):
         """build widget method"""
         super().build()
-        self.display_task = ft.Checkbox(label=self.task_name)
+        self.display_task = ft.Checkbox(
+            value=False, label=self.task_name, on_change=self.status_changed
+        )
         self.edit_name = ft.TextField(expand=1)
 
         self.display_view = ft.Row(
@@ -78,3 +82,8 @@ class Task(ft.Column):
         self.edit_view.visible = False
         self.display_view.visible = True
         self.update()
+
+    def status_changed(self, _):
+        "change the status"
+        self.completed = self.display_task.value
+        self.task_status_change(self)
